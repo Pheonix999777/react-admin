@@ -1,0 +1,7 @@
+.sidebar {
+  width: $sidebar-width;
+  height: calc(100vh - $header-height - $footer-height);
+  padding: 2px;
+  border-right: 1px solid $border-color;
+  background-color: #fff;
+}

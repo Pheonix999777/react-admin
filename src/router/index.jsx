@@ -14,11 +14,12 @@ import { MainLayout2 } from 'modules/Customers/MainLayout';
 export const Router = observer(() => {
   let role = localStorage.getItem('role');
   let permission = localStorage.getItem('has_permission');
+  let access_token = localStorage.getItem('access_token');
   useEffect(() => {
     authStore.checkAuthentication();
   }, []);
 
-  if (role == 'admin' && permission == 'true') {
+  if (role == 'admin' && permission == 'true' && access_token) {
     return (
       <Routes>
         <Route path="" element={<MainLayout />}>
@@ -31,7 +32,7 @@ export const Router = observer(() => {
         </Route>
       </Routes>
     );
-  } else if (permission == 'true') {
+  } else if (access_token && permission == 'true') {
     return (
       <Routes>
         <Route path="" element={<MainLayout2 />}>

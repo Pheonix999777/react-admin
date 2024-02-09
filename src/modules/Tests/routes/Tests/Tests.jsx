@@ -4,8 +4,8 @@ import { useTestsProps } from './useTestsProps';
 import { Box, Button, Checkbox, FormControl, Heading, Input, Select } from '@chakra-ui/react';
 import { CustomModal } from 'components/CustomModal';
 
-import axios from 'axios';
 import { useGetSubjects } from 'services/api/subjects/subjects.service';
+import request from 'services/httpRequest';
 
 export const Tests = () => {
   const {
@@ -52,13 +52,25 @@ export const Tests = () => {
     };
 
     try {
-      const response = await axios.post('http://54.196.215.223:8000/v1/tests', data, { headers });
+      const response = await request.post('/tests', data);
       console.log('Test created successfully:', response.data);
       navigate('/test');
       window.location.reload();
     } catch (error) {
       console.error('Error creating test:', error);
     }
+  };
+
+  const handleContentChange = (index) => (e) => {
+    const updatedFields = [...fields];
+    updatedFields[index].content = e.target.value;
+    setFields(updatedFields);
+  };
+
+  const handleAnswerChange = (index) => (e) => {
+    const updatedFields = [...fields];
+    updatedFields[index].is_answer = e.target.checked;
+    setFields(updatedFields);
   };
 
   console.log(selectedImage);
@@ -89,22 +101,10 @@ export const Tests = () => {
           </Select>
           <Heading fontSize="14px">Variants</Heading>
           {fields.map((item, index) => {
-            const handleContentChange = (e) => {
-              const updatedFields = [...fields];
-              updatedFields[index].content = e.target.value;
-              setFields(updatedFields);
-            };
-
-            const handleAnswerChange = (e) => {
-              const updatedFields = [...fields];
-              updatedFields[index].is_answer = e.target.checked;
-              setFields(updatedFields);
-            };
-
             return (
               <Box key={item.id}>
-                <Input placeholder="Content" value={item.content} onChange={handleContentChange} />
-                <Checkbox checked={item.is_answer} onChange={handleAnswerChange}>
+                <Input placeholder="Content" value={item.content} onChange={handleContentChange(index)} />
+                <Checkbox checked={item.is_answer} onChange={handleAnswerChange(index)}>
                   Is current answer
                 </Checkbox>
                 <Button colorScheme="red" fontSize="10" onClick={() => remove(index)}>
